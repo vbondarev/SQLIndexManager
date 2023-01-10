@@ -19,9 +19,10 @@ internal static class Program
             .CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((_, builder) =>
             {
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 builder
                     .AddJsonFile("appsettings.json")
-                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true);
+                    .AddJsonFile($"appsettings.{environment}.json", true);
             })
             .ConfigureLogging((_, builder) =>
             {
