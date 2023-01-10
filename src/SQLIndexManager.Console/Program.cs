@@ -1,9 +1,31 @@
-﻿namespace SQLIndexManager.Console;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
-internal class Program
+namespace SQLIndexManager.Console;
+
+internal static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        System.Console.WriteLine("Hello, World!");
+        using var host =  CreateHostBuilder(args).Build();
+
+        await host.RunAsync();
+    }
+
+    private static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host
+            .CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((_, builder) =>
+            {
+                builder
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true);
+            })
+            .ConfigureLogging((_, builder) =>
+            {
+                builder.AddSerilog();
+            });
     }
 }
